@@ -1,60 +1,89 @@
 ﻿using listasligadas;
-using System.ComponentModel.Design;
 
 var list = new DoublyLinkedList<string>();
-var opc = "0";
+string? opc;
 do
 {
     opc = Menu();
     switch (opc)
     {
         case "1":
-            Console.Write("Enter the data to insert at the beginning: ");
-            var dataAtBeginning = Console.ReadLine();
-            if (dataAtBeginning != null)
-            {
-                list.InsertAtBeginning(dataAtBeginning);
-            }
+            Console.Write("Enter data to insert (ordered): ");
+            var ordered = Console.ReadLine();
+            if (ordered != null)
+                list.InsertOrdered(ordered);
             break;
 
         case "2":
-            Console.Write("Enter the data to insert at the end: ");
-            var dataAtEnd = Console.ReadLine();
-            if (dataAtEnd != null)
-            {
-                list.InsertAtEnd(dataAtEnd);
-            }
+            Console.WriteLine("Forward: " + list.Getforward());
             break;
 
         case "3":
-            Console.WriteLine(list.Getforward());
+            Console.WriteLine("Backward: " + list.GetBackward());
             break;
-        case "4":
 
-            Console.WriteLine(list.GetBackward());
+        case "4":
+            list.SortDescending();
+            Console.WriteLine("List sorted descending:");
+            Console.WriteLine(list.Getforward());
             break;
 
         case "5":
-            Console.Write("Enter the date to remove: ");
-            var remove = Console.ReadLine();
-            if (remove != null)
-            {
-                list.Remove(remove);
-                Console.WriteLine("Item removed.");
-            }
+            var modes = list.GetModes();
+            Console.WriteLine("Mode(s): " + string.Join(", ", modes));
+            break;
+
+        case "6":
+            Console.WriteLine("Graph:");
+            foreach (var kv in list.GetFrequency())
+                Console.WriteLine($"{kv.Key} {new string('*', kv.Value)}");
+            break;
+
+        case "7":
+            Console.Write("Enter value to check: ");
+            var exists = Console.ReadLine();
+            Console.WriteLine(list.Exists(exists!) ? "Exists" : "Does not exist");
+            break;
+
+        case "8":
+            Console.Write("Enter value to remove one occurrence: ");
+            var r1 = Console.ReadLine();
+            list.RemoveOne(r1!);
+            Console.WriteLine("Updated list:");
+            Console.WriteLine(list.Getforward());
+            break;
+
+        case "9":
+            Console.Write("Enter value to remove all occurrences: ");
+            var r2 = Console.ReadLine();
+            list.RemoveAll(r2!);
+            Console.WriteLine("Updated list:");
+            Console.WriteLine(list.Getforward());
+            break;
+
+        case "10":
+            list.SortDescending();
+            Console.WriteLine("List sorted descending:");
+            Console.WriteLine(list.Getforward());
             break;
     }
 }
-while  (opc != "0");
+while (opc != "0");
 
 string Menu()
 {
-    Console.WriteLine("1. Insert at beginning");
-    Console.WriteLine("2. Insert at end");
-    Console.WriteLine("3. Show list forward");
-    Console.WriteLine("4. Show list backward");
-    Console.WriteLine("5. Remove");
+    Console.WriteLine("\n--- MENU ---");
+    Console.WriteLine("1. Add (Ordered)");
+    Console.WriteLine("2. Show Forward");
+    Console.WriteLine("3. Show Backward");
+    Console.WriteLine("4. Sort Descending and Show");
+    Console.WriteLine("5. Show Mode(s)");
+    Console.WriteLine("6. Show Graph");
+    Console.WriteLine("7. Exists?");
+    Console.WriteLine("8. Remove One Occurrence");
+    Console.WriteLine("9. Remove All Occurrences");
+    Console.WriteLine("10. Sort Descending and Show Again");
     Console.WriteLine("0. Exit");
-    Console.WriteLine("Choose an option: ");
+    Console.Write("Choose an option: ");
     return Console.ReadLine() ?? "0";
 }

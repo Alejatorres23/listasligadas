@@ -5,35 +5,36 @@ using System.Linq;
 namespace listasligadas
 {
     public class DoublyLinkedList<T>
-
     {
         private DoubleNode<T>? _head;
         private DoubleNode<T>? _tail;
+
         public DoublyLinkedList()
         {
-            _tail = null;
             _head = null;
-
+            _tail = null;
         }
+
         public void InsertAtBeginning(T data)
         {
             var newNode = new DoubleNode<T>(data);
-            if (_head == null) // empty list 
+            if (_head == null)
             {
                 _head = newNode;
                 _tail = newNode;
             }
-            else // non-empty list
+            else
             {
                 newNode.Next = _head;
                 _head.Prev = newNode;
                 _head = newNode;
             }
         }
+
         public void InsertAtEnd(T data)
         {
             var newNode = new DoubleNode<T>(data);
-            if (_tail == null) // empty list
+            if (_tail == null)
             {
                 _head = newNode;
                 _tail = newNode;
@@ -46,7 +47,32 @@ namespace listasligadas
             }
         }
 
-        //Prins the list from head to tail 
+        public void InsertOrdered(T data)
+        {
+            var newNode = new DoubleNode<T>(data);
+            if (_head == null || Comparer<T>.Default.Compare(data!, _head.Data!) < 0)
+            {
+                InsertAtBeginning(data);
+                return;
+            }
+
+            var current = _head;
+            while (current!.Next != null && Comparer<T>.Default.Compare(current.Next.Data!, data!) < 0)
+            {
+                current = current.Next;
+            }
+
+            newNode.Next = current.Next;
+            newNode.Prev = current;
+
+            if (current.Next != null)
+                current.Next.Prev = newNode;
+            else
+                _tail = newNode;
+
+            current.Next = newNode;
+        }
+
         public string Getforward()
         {
             var output = string.Empty;
@@ -56,10 +82,9 @@ namespace listasligadas
                 output += $"{current.Data} <=> ";
                 current = current.Next;
             }
-            return output.Substring(0, output.Length - 5);
+            return output.Length > 5 ? output.Substring(0, output.Length - 5) : string.Empty;
         }
 
-        // Prints the list from tail to head
         public string GetBackward()
         {
             var output = string.Empty;
@@ -69,34 +94,135 @@ namespace listasligadas
                 output += $"{current.Data} <=> ";
                 current = current.Prev;
             }
-            return output.Substring(0, output.Length - 5);
+            return output.Length > 5 ? output.Substring(0, output.Length - 5) : string.Empty;
         }
+
+        public void SortDescending()
+        {
+            List<T> elements = new List<T>();
+            var current = _head;
+            while (current != null)
+            {
+                if (current.Data != null)
+                    elements.Add(current.Data);
+                current = current.Next;
+            }
+
+            elements.Sort((a, b) => Comparer<T>.Default.Compare(b!, a!));
+
+            _head = _tail = null;
+            foreach (var item in elements)
+            {
+                InsertAtEnd(item!);
+            }
+        }
+
+        public List<T> GetModes()
+        {
+            var frequency = new Dictionary<string, int>();
+            var map = new Dictionary<string, T>();
+            var current = _head;
+
+            while (current != null)
+            {
+                if (current.Data != null)
+                {
+                    string key = current.Data.ToString()!;
+                    map[key] = current.Data;
+                    if (frequency.ContainsKey(key))
+                        frequency[key]++;
+                    else
+                        frequency[key] = 1;
+                }
+                current = current.Next;
+            }
+
+            if (frequency.Count == 0) return new List<T>();
+
+            int maxFreq = frequency.Values.Max();
+            return frequency.Where(p => p.Value == maxFreq).Select(p => map[p.Key]).ToList();
+        }
+
+        public bool Exists(T data)
+        {
+            var current = _head;
+            while (current != null)
+            {
+                if (current.Data != null && current.Data.Equals(data))
+                    return true;
+                current = current.Next;
+            }
+            return false;
+        }
+
         public void Remove(T data)
         {
             var current = _head;
             while (current != null)
             {
-                if (current.Data!.Equals(data))
+                if (current.Data != null && current.Data.Equals(data))
                 {
                     if (current.Prev != null)
-                    {  
                         current.Prev.Next = current.Next;
-                    }
                     else
-                    {
-                        _head = current.Next; // Remove head
-                    }
+                        _head = current.Next;
 
                     if (current.Next != null)
-                    {
                         current.Next.Prev = current.Prev;
-                    }
                     else
-                    {
-                        _tail = current.Prev; // Remove tail
-                    }
+                        _tail = current.Prev;
 
                     break;
                 }
-                current =current.Next;
+                current = current.Next;
+            }
         }
+
+        public void RemoveOne(T data)
+        {
+            Remove(data);
+        }
+
+        public void RemoveAll(T data)
+        {
+            var current = _head;
+            while (current != null)
+            {
+                var next = current.Next;
+                if (current.Data != null && current.Data.Equals(data))
+                {
+                    if (current.Prev != null)
+                        current.Prev.Next = current.Next;
+                    else
+                        _head = current.Next;
+
+                    if (current.Next != null)
+                        current.Next.Prev = current.Prev;
+                    else
+                        _tail = current.Prev;
+                }
+                current = next;
+            }
+        }
+
+        public Dictionary<string, int> GetFrequency()
+        {
+            var freq = new Dictionary<string, int>();
+            var current = _head;
+            while (current != null)
+            {
+                if (current.Data != null)
+                {
+                    string key = current.Data.ToString()!;
+                    if (freq.ContainsKey(key))
+                        freq[key]++;
+                    else
+                        freq[key] = 1;
+                }
+                current = current.Next;
+            }
+            return freq;
+        }
+    }
+}
+
