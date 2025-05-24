@@ -2,6 +2,7 @@
 
 var list = new DoublyLinkedList<string>();
 string? opc;
+
 do
 {
     opc = Menu();
@@ -60,12 +61,6 @@ do
             Console.WriteLine("Updated list:");
             Console.WriteLine(list.Getforward());
             break;
-
-        case "10":
-            list.SortDescending();
-            Console.WriteLine("List sorted descending:");
-            Console.WriteLine(list.Getforward());
-            break;
     }
 }
 while (opc != "0");
@@ -82,7 +77,6 @@ string Menu()
     Console.WriteLine("7. Exists?");
     Console.WriteLine("8. Remove One Occurrence");
     Console.WriteLine("9. Remove All Occurrences");
-    Console.WriteLine("10. Sort Descending and Show Again");
     Console.WriteLine("0. Exit");
     Console.Write("Choose an option: ");
     return Console.ReadLine() ?? "0";

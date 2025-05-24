@@ -155,7 +155,7 @@ namespace listasligadas
             return false;
         }
 
-        public void Remove(T data)
+        public void RemoveOne(T data)
         {
             var current = _head;
             while (current != null)
@@ -176,11 +176,6 @@ namespace listasligadas
                 }
                 current = current.Next;
             }
-        }
-
-        public void RemoveOne(T data)
-        {
-            Remove(data);
         }
 
         public void RemoveAll(T data)
@@ -225,4 +220,3 @@ namespace listasligadas
         }
     }
 }
-
