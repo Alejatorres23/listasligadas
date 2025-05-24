@@ -119,20 +119,17 @@ namespace listasligadas
 
         public List<T> GetModes()
         {
-            var frequency = new Dictionary<string, int>();
-            var map = new Dictionary<string, T>();
+            var frequency = new Dictionary<T, int>();
             var current = _head;
 
             while (current != null)
             {
                 if (current.Data != null)
                 {
-                    string key = current.Data.ToString()!;
-                    map[key] = current.Data;
-                    if (frequency.ContainsKey(key))
-                        frequency[key]++;
+                    if (frequency.ContainsKey(current.Data))
+                        frequency[current.Data]++;
                     else
-                        frequency[key] = 1;
+                        frequency[current.Data] = 1;
                 }
                 current = current.Next;
             }
@@ -140,7 +137,7 @@ namespace listasligadas
             if (frequency.Count == 0) return new List<T>();
 
             int maxFreq = frequency.Values.Max();
-            return frequency.Where(p => p.Value == maxFreq).Select(p => map[p.Key]).ToList();
+            return frequency.Where(p => p.Value == maxFreq).Select(p => p.Key).ToList();
         }
 
         public bool Exists(T data)
@@ -200,19 +197,18 @@ namespace listasligadas
             }
         }
 
-        public Dictionary<string, int> GetFrequency()
+        public Dictionary<T, int> GetFrequency()
         {
-            var freq = new Dictionary<string, int>();
+            var freq = new Dictionary<T, int>();
             var current = _head;
             while (current != null)
             {
                 if (current.Data != null)
                 {
-                    string key = current.Data.ToString()!;
-                    if (freq.ContainsKey(key))
-                        freq[key]++;
+                    if (freq.ContainsKey(current.Data))
+                        freq[current.Data]++;
                     else
-                        freq[key] = 1;
+                        freq[current.Data] = 1;
                 }
                 current = current.Next;
             }
