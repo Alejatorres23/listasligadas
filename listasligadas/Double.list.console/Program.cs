@@ -43,11 +43,7 @@ do
 
         case "6":
             Console.WriteLine("Graph:");
-            foreach (var kv in list.GetFrequency().OrderBy(k => k.Key))
-            {
-                Console.Write($"{kv.Key} ");
-                Console.WriteLine(new string('*', kv.Value));
-            }
+            list.PrintGraph();
             break;
 
         case "7":
@@ -91,3 +87,4 @@ string Menu()
     Console.Write("Choose an option: ");
     return Console.ReadLine() ?? "0";
 }
+

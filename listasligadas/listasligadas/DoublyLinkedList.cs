@@ -109,7 +109,6 @@ namespace listasligadas
             }
 
             elements.Sort((a, b) => Comparer<T>.Default.Compare(b!, a!));
-
             _head = _tail = null;
             foreach (var item in elements)
             {
@@ -140,6 +139,16 @@ namespace listasligadas
             return frequency.Where(p => p.Value == maxFreq).Select(p => p.Key).ToList();
         }
 
+        public void PrintGraph()
+        {
+            var frequency = GetFrequency();
+            foreach (var item in frequency.OrderBy(f => f.Key))
+            {
+                Console.Write($"{item.Key} ");
+                Console.WriteLine(new string('*', item.Value));
+            }
+        }
+
         public bool Exists(T data)
         {
             var current = _head;
@@ -168,7 +177,6 @@ namespace listasligadas
                         current.Next.Prev = current.Prev;
                     else
                         _tail = current.Prev;
-
                     break;
                 }
                 current = current.Next;
